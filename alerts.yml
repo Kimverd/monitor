@@ -18,3 +18,12 @@ groups:
     annotations:
       summary: "Host Elasicsearch is down"
       description: "Host Elasicsearch is down" 
+
+  - alert: HostOutOfDiskSpace
+    expr: ceil((node_filesystem_avail_bytes{fstype="rootfs",mountpoint="/"}  * 100) / node_filesystem_size_bytes{fstype="rootfs",mountpoint="/"}) < 10
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Host out of disk space (instance {{ $labels.instance }})"
+      description: "Disk is almost full (< 10% left)"
