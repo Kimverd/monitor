@@ -1,0 +1,53 @@
+<source>
+  @type tail
+  path /var/log/nginx/error.log
+  pos_file /var/log/td-agent/httpd-error.log.pos
+  tag nginx-error
+  <parse>
+    @type nginx
+  </parse>
+</source>
+
+<source>
+  @type tail
+  path /var/log/nginx/access.log
+  pos_file /var/log/td-agent/nginx-access.log.pos
+  tag nginx-access
+  <parse>
+    @type regexp
+    expression /^(?<remote>[^ ]*) (?<dash>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^"]*)" "(?<agent>[^"]*)" "(?<forwarder>[^"]*)") (?<upstream_response_time>[^ ]*) (?<request_time>[^ ]*)/
+    time_format %d/%b/%Y:%H:%M:%S %z
+  </parse>
+</source>
+
+<source>
+  @type tail
+  path /var/log/nginx/prom.access.log
+  pos_file /var/log/td-agent/prom-access.log.pos
+  tag nginx-prom-access
+  <parse>
+    @type regexp
+    expression /^(?<remote>[^ ]*) (?<dash>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^"]*)" "(?<agent>[^"]*)" "(?<forwarder>[^"]*)") (?<upstream_response_time>[^ ]*) (?<request_time>[^ ]*)/
+    time_format %d/%b/%Y:%H:%M:%S %z
+  </parse>
+</source>
+
+<source>
+  @type tail
+  path /var/log/nginx/site.access.log
+  pos_file /var/log/td-agent/site-access.log.pos
+  tag nginx-site-access
+  <parse>
+    @type regexp
+    expression /^(?<remote>[^ ]*) (?<dash>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^"]*)" "(?<agent>[^"]*)" "(?<forwarder>[^"]*)") (?<upstream_response_time>[^ ]*) (?<request_time>[^ ]*)/
+    time_format %d/%b/%Y:%H:%M:%S %z
+  </parse>
+</source>
+
+<match **>
+  @type gelf
+  host localhost
+  protocol tcp
+  port 12201
+  flush_interval 5s
+</match>
