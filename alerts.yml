@@ -1,0 +1,20 @@
+groups:
+- name: general.rules
+  rules:
+  - alert: Grafana_is_down
+    expr: up{job="grafana"} < 1
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Host Grafana is down"
+      description: "Host Grafana is down"
+
+  - alert: Elasticsearch_is_down
+    expr: up{job="elasticsearch"} < 1
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Host Elasicsearch is down"
+      description: "Host Elasicsearch is down" 
